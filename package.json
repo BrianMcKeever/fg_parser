@@ -1,5 +1,12 @@
 {
-  "name"    : "Fantasy Grounds Parser",
-  "version" : "0.1.0",
-  "main"    : "main.js"
+    "name"    : "FGParser",
+    "email": "keever@gmail.com",
+    "url": "https://github.com/yxven/project/fg_parser",
+    "version" : "0.1.0",
+    "main"    : "main.js",
+    "license": "0BSD",
+    "dependencies" :
+    {
+        "jszip" : "3.0.0"
+    }
 }
