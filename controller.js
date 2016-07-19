@@ -1,4 +1,32 @@
 const {ipcMain} = require('electron');
+const {dialog} = require('electron');
+const fs = require('fs');
+
+ipcMain.on('saveConfig', (event, arg) => {
+    var path = dialog.showSaveDialog({
+        title: "title"
+    })
+    if(path !== undefined){
+        fs.writeFileSync(path, JSON.stringify(arg));
+    }
+    event.returnValue = null;
+});
+
+ipcMain.on('loadConfig', (event, arg) => {
+    var path = dialog.showOpenDialog({
+        title: "title",
+        properties: ["openFile"]
+    })
+    var data = null;
+    if(path !== undefined){
+        path = path[0];
+        var buffer = fs.readFileSync(path);
+        data = JSON.parse(buffer.toString());
+    }
+    event.returnValue = data;
+});
+
+
 ipcMain.on('input-path', (event, arg) => {
     console.log(arg);  // prints "ping"
     event.sender.send('asynchronous-reply', 'pong');

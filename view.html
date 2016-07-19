@@ -15,29 +15,29 @@
   <div class="col-xs-1">
   </div>
   <div class="col-xs-5">
-    <button type="button" class="btn btn-default">New</button>
-    <button type="button" class="btn btn-default">Load</button>
-    <button type="button" class="btn btn-default">Save</button>
+    <button type="button" class="btn btn-default" id="newButton">New</button>
+    <button type="button" class="btn btn-default" id="loadButton">Load</button>
+    <button type="button" class="btn btn-default" id="saveButton">Save</button>
     <form>
       <div class="form-group">
         <label for="moduleName">Module Name</label>
-        <input type="text" class="form-control" id="moduleName" placeholder="My Book of Spells">
+        <input type="text" class="form-control" id="moduleNameInput" placeholder="My Book of Spells">
       </div>
       <div class="form-group">
         <label for="moduleCategory">Module Category</label>
-        <input type="text" class="form-control" id="moduleCategory" placeholder="Custom">
+        <input type="text" class="form-control" id="moduleCategoryInput" placeholder="Custom">
       </div>
       <div class="form-group">
         <label for="moduleAuthor">Module Author</label>
-        <input type="text" class="form-control" id="moduleAuthor" placeholder="Rick Astley">
+        <input type="text" class="form-control" id="moduleAuthorInput" placeholder="Rick Astley">
       </div>
       <div class="form-group">
         <label for="inputPath">Input Folder Path</label>
-        <input type="text" class="form-control" id="inputPath" placeholder="C:\Users\YourUserName\FG_Modules\MyBookOfSpells\">
+        <input type="text" class="form-control" id="inputPathInput" placeholder="C:\Users\YourUserName\FG_Modules\MyBookOfSpells\">
         <p class="help-block">This is the file path to the location of a folder containing the input files you want to make into a module.</p>
       </div>
         <label for="outputPath">Output Path</label>
-        <input type="text" class="form-control" id="outputPath" placeholder="C:\Users\YourUserName\AppData\Roaming\Fantasy Grounds\modules\MyBookOfSpells.mod">
+        <input type="text" class="form-control" id="outputPathInput" placeholder="C:\Users\YourUserName\AppData\Roaming\Fantasy Grounds\modules\MyBookOfSpells.mod">
         <p class="help-block">This is the file location where you want the module to appear. It should
         end with the .mod file extension.</p>
       </div>
@@ -45,19 +45,19 @@
       <div class="form-group">
         <div class="radio-inline">
           <label>
-            <input type="radio" name="optionsRadios" id="moduleType1" value="option1" checked>
+            <input type="radio" name="optionsRadios" id="moduleTypeGMRadio" value="GM only" checked>
             GM only
           </label>
         </div>
         <div class="radio-inline">
           <label>
-            <input type="radio" name="optionsRadios" id="moduleType2" value="option2">
+            <input type="radio" name="optionsRadios" id="moduleTypeGMPlayerRadio" value="GM/Player">
             GM/Player
           </label>
         </div>
         <div class="radio-inline">
           <label>
-            <input type="radio" name="optionsRadios" id="moduleType3" value="option3">
+            <input type="radio" name="optionsRadios" id="moduleTypeCommonRadio" value="Common">
             Common
           </label>
         </div>
@@ -66,43 +66,43 @@
       <b>Files to Include</b>
       <div class="checkbox">
         <label>
-          <input type="checkbox" value="" disabled>
+          <input type="checkbox" value="" disabled id = "fileClassCheckbox">
           class.txt
         </label>
       </div>
       <div class="checkbox">
         <label>
-          <input type="checkbox" value="" disabled>
+          <input type="checkbox" value="" disabled id = "fileEquipmentCheckbox">
           equipment.txt
         </label>
       </div>
       <div class="checkbox">
         <label>
-          <input type="checkbox" value="" disabled>
+          <input type="checkbox" value="" disabled id = "fileFeatsCheckbox">
           feats.txt
         </label>
       </div>
       <div class="checkbox">
         <label>
-          <input type="checkbox" value="" disabled>
+          <input type="checkbox" value="" disabled id = "fileNPCsCheckbox">
           npcs.txt
         </label>
       </div>
       <div class="checkbox">
         <label>
-          <input type="checkbox" value="" disabled>
+          <input type="checkbox" value="" disabled id = "fileRacesCheckbox">
           races.txt
         </label>
       </div>
       <div class="checkbox">
         <label>
-          <input type="checkbox" value="" checked>
+          <input type="checkbox" value="" checked id = "fileSpellsCheckbox">
           spells.txt
         </label>
       </div>
       <div class="checkbox">
         <label>
-          <input type="checkbox" value="" disabled>
+          <input type="checkbox" value="" disabled id = "fileTokensCheckbox">
           tokens.txt
         </label>
       </div>
