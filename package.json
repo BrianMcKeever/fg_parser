@@ -1,0 +1,5 @@
+{
+  "name"    : "Fantasy Grounds Parser",
+  "version" : "0.1.0",
+  "main"    : "main.js"
+}
