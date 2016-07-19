@@ -11,12 +11,11 @@ let win;
 function createWindow() {
   // Create the browser window.
   win = new BrowserWindow({width: 800, height: 600, resizable: false});
+  //win.setMenu(null);
+  //This disables the default menu bar which is useful for development
 
   // and load the view.html of the app.
   win.loadURL(`file://${__dirname}/view.html`);
-
-  // Open the DevTools.
-  win.webContents.openDevTools();
 
   // Emitted when the window is closed.
   win.on('closed', () => {
