@@ -1,12 +1,12 @@
 const {ipcMain} = require('electron');
 ipcMain.on('input-path', (event, arg) => {
-  console.log(arg);  // prints "ping"
-  event.sender.send('asynchronous-reply', 'pong');
+    console.log(arg);  // prints "ping"
+    event.sender.send('asynchronous-reply', 'pong');
 });
 
 ipcMain.on('synchronous-message', (event, arg) => {
-  console.log(arg);  // prints "ping"
-  event.returnValue = 'pong';
+    console.log(arg);  // prints "ping"
+    event.returnValue = 'pong';
 });
 
 function test(path){
@@ -32,13 +32,13 @@ function test(path){
     zip.file("Hello.txt", "Hello World\n");
     var img = zip.folder("images");
     zip
-    .generateNodeStream({type:'nodebuffer',streamFiles:true})
-    .pipe(fs.createWriteStream(parserOutputLocation))
-    .on('finish', function () {
-        // JSZip generates a readable stream with a "end" event,
-        // but is piped here in a writable stream which emits a "finish" event.
-        console.log("fg_parser_output.zip written.");
-    });
+        .generateNodeStream({type:'nodebuffer',streamFiles:true})
+        .pipe(fs.createWriteStream(parserOutputLocation))
+        .on('finish', function () {
+            // JSZip generates a readable stream with a "end" event,
+            // but is piped here in a writable stream which emits a "finish" event.
+            console.log("fg_parser_output.zip written.");
+        });
 
     global.fg_parser = true
 }

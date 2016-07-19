@@ -1,32 +1,113 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>Fantasy Ground's Parser</title>
-        <script>
-            // Module to control application life.
-            const {ipcRenderer} = require('electron');
-            function processButton(){
-                var fileToLoad = document.getElementById("input").files[0];
-                var path = fileToLoad.path;
-                console.log(ipcRenderer.sendSync('synchronous-message', path));
-            }
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- The above 2 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+<title>FG Parser</title>
+<script src="./view.js"></script>
+<link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap-theme.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+</head>
 
-            console.log(ipcRenderer.sendSync('synchronous-message', 'ping')); // prints "pong"
+<body style="width:765px;">
+<div class="row">
+  <div class="col-xs-1">
+  </div>
+  <div class="col-xs-5">
+    <form>
+      <div class="form-group">
+        <label for="moduleName">Module Name</label>
+        <input type="text" class="form-control" id="moduleName" placeholder="My Book of Spells">
+      </div>
+      <div class="form-group">
+        <label for="moduleCategory">Module Category</label>
+        <input type="text" class="form-control" id="moduleCategory" placeholder="Custom">
+      </div>
+      <div class="form-group">
+        <label for="moduleAuthor">Module Author</label>
+        <input type="text" class="form-control" id="moduleAuthor" placeholder="Rick Astley">
+      </div>
+      <div class="form-group">
+        <label for="inputPath">Input Folder Path</label>
+        <input type="text" class="form-control" id="inputPath" placeholder="C:\Users\YourUserName\FG_Modules\MyBookOfSpells\">
+        <p class="help-block">This is the file path to the location of a folder containing the input files you want to make into a module.</p>
+      </div>
+        <label for="outputPath">Output Path</label>
+        <input type="text" class="form-control" id="outputPath" placeholder="C:\Users\YourUserName\AppData\Roaming\Fantasy Grounds\modules\MyBookOfSpells.mod">
+        <p class="help-block">This is the file location where you want the module to appear. It should
+        end with the .mod file extension.</p>
+      </div>
+      <b>Module Type</b>
+      <div class="form-group">
+        <div class="radio-inline">
+          <label>
+            <input type="radio" name="optionsRadios" id="moduleType1" value="option1" checked>
+            GM only
+          </label>
+        </div>
+        <div class="radio-inline">
+          <label>
+            <input type="radio" name="optionsRadios" id="moduleType2" value="option2">
+            GM/Player
+          </label>
+        </div>
+        <div class="radio-inline">
+          <label>
+            <input type="radio" name="optionsRadios" id="moduleType3" value="option3">
+            Common
+          </label>
+        </div>
 
-            ipcRenderer.on('asynchronous-reply', (event, arg) => {
-              console.log(arg); // prints "pong"
-            });
-            ipcRenderer.send('input-path', 'ping');
-        </script>
-    </head>
+      <br/>
+      <b>Files to Include</b>
+      <div class="checkbox">
+        <label>
+          <input type="checkbox" value="" disabled>
+          class.txt
+        </label>
+      </div>
+      <div class="checkbox">
+        <label>
+          <input type="checkbox" value="" disabled>
+          equipment.txt
+        </label>
+      </div>
+      <div class="checkbox">
+        <label>
+          <input type="checkbox" value="" disabled>
+          feats.txt
+        </label>
+      </div>
+      <div class="checkbox">
+        <label>
+          <input type="checkbox" value="" disabled>
+          npcs.txt
+        </label>
+      </div>
+      <div class="checkbox">
+        <label>
+          <input type="checkbox" value="" disabled>
+          races.txt
+        </label>
+      </div>
+      <div class="checkbox">
+        <label>
+          <input type="checkbox" value="" checked>
+          spells.txt
+        </label>
+      </div>
+      <div class="checkbox">
+        <label>
+          <input type="checkbox" value="" disabled>
+          tokens.txt
+        </label>
+      </div>
 
-    <body>
-        <input type="file" id="input">
-        <button id="processButton" onclick="processButton()">Process</button>
-        We are using node <script>document.write(process.versions.node)</script>,
-        Chrome <script>document.write(process.versions.chrome)</script>,
-        and Electron <script>document.write(process.versions.electron)</script>.
-    </body>
+      <button type="submit" class="btn btn-default">Process</button>
+    </form>
+  </div>
+</div>
+</body>
 </html>
 

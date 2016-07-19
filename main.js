@@ -10,7 +10,7 @@ let win;
 
 function createWindow() {
   // Create the browser window.
-  win = new BrowserWindow({width: 800, height: 600});
+  win = new BrowserWindow({width: 800, height: 600, resizable: false});
 
   // and load the view.html of the app.
   win.loadURL(`file://${__dirname}/view.html`);
