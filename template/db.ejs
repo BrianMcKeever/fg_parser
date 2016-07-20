@@ -88,41 +88,37 @@
     <% if(items) { %>
 	<item>
         <category name="" mergeid="<%= moduleMergeId %>" baseicon="0" decalicon="0">
-			<id-00001>
-				<ac type="number">0</ac>
-				<bonus type="number">0</bonus>
-				<cost type="string">cost</cost>
+            <% items.forEach(function(item){ %>
+            <id-<%= item.id %>>
+                <bonus type="number"><%= item.bonus %></bonus>
+                <cost type="string"><%= item.cost %></cost>
 				<description type="formattedtext">
-					<p>item description</p>
+                    <p>
+                        <%- item.description %>
+                    </p>
 				</description>
-				<isidentified type="number">0</isidentified>
-				<istemplate type="number">0</istemplate>
-				<locked type="number">0</locked>
-				<name type="string">item name</name>
-				<nonid_name type="string">item non-id name</nonid_name>
-				<nonidentified type="string">item notes</nonidentified>
-				<rarity type="string">item rarity</rarity>
-				<subtype type="string">item subtype</subtype>
-				<type type="string">item type</type>
-				<weight type="number">13</weight>
-			</id-00001>
-			<id-00002>
-				<ac type="number">0</ac>
-				<bonus type="number">0</bonus>
-				<description type="formattedtext">
-					<p></p>
-				</description>
-				<isidentified type="number">0</isidentified>
-				<istemplate type="number">0</istemplate>
-				<locked type="number">0</locked>
-				<name type="string">item 2 name</name>
-				<nonid_name type="string">item 2 non-id name</nonid_name>
-				<nonidentified type="string">item 2 notes</nonidentified>
-				<rarity type="string">item 2 rarity</rarity>
-				<subtype type="string">item 2 subtype</subtype>
-				<type type="string">item 2 type</type>
-				<weight type="number">0</weight>
-			</id-00002>
+                <% if(item.type == "armor"){ %>
+                    <ac type="number"><%= item.ac %></ac>
+                    <dexbonus type="string"><%= item.dexBonus %></dexbonus>
+                    <strength type="string"><%= item.strengthRequirement %></strength>
+                    <properties type="string"><%= item.properties %></properties>
+                <% } %>
+                <% if(item.type == "weapon"){ %>
+                    <damage type="string"><%= item.damage %></damage>
+                    <properties type="string"><%= item.properties %></properties>
+                <% } %>
+                <isidentified type="number"><%= item.isIdentified %></isidentified>
+                <istemplate type="number"><%= item.isTemplate %></istemplate>
+                <locked type="number"><%= item.isLocked %></locked>
+                <name type="string"><%= item.name %></name>
+                <nonid_name type="string"><%= item.unidentifiedName %></nonid_name>
+                <nonidentified type="string"><%= item.notes %></nonidentified>
+                <rarity type="string"><%= item.rarity %></rarity>
+                <subtype type="string"><%= item.subtype %></subtype>
+                <type type="string"><%= item.type %></type>
+                <weight type="number"><%= item.weight %></weight>
+            </id-<%= item.id %>>
+            <% }) %>
 		</category>
 	</item>
     <% } %>
@@ -258,20 +254,15 @@
 		<item>
 			<name type="string">Items</name>
 			<index>
-				<id-00001>
+                <% items.forEach(function(item){ %>
+                <id-<%= item.id %>>
 					<listlink type="windowreference">
 						<class>item</class>
-                        <recordname>item.id-00001@<%= moduleName %></recordname>
+                        <recordname>item.id-<%= item.id %>@<%= moduleName %></recordname>
 					</listlink>
-					<name type="string">item name</name>
-				</id-00001>
-				<id-00002>
-					<listlink type="windowreference">
-						<class>item</class>
-                        <recordname>item.id-00002@<%= moduleName %></recordname>
-					</listlink>
-					<name type="string">item 2 name</name>
-				</id-00002>
+                    <name type="string"><%= item.name %></name>
+                </id-<%= item.id %>>
+                <% }) %>
 			</index>
 		</item>
         <% } %>

@@ -1,18 +1,18 @@
 {
-    "name"    : "FGParser",
-    "email": "keever@gmail.com",
-    "repository": {
-        "type" : "git",
-        "url" : "https://github.com/yxven/fg_parser"
-    },
-    "version" : "0.1.0",
-    "main"    : "main.js",
-    "license": "0BSD",
-    "description": "This project makes it easier to write custom modules for Fantasy Grounds",
-    "dependencies" :
-    {
-        "bootstrap": "3.3.6",
-        "ejs": "2.4.2",
-        "jszip" : "3.0.0"
-    }
+  "name": "FGParser",
+  "email": "keever@gmail.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yxven/fg_parser"
+  },
+  "version": "0.1.0",
+  "main": "main.js",
+  "license": "0BSD",
+  "description": "This project makes it easier to write custom modules for Fantasy Grounds",
+  "dependencies": {
+    "archiver": "1.0.0",
+    "bootstrap": "3.3.6",
+    "ejs": "2.4.2",
+    "validate.js": "0.10.0"
+  }
 }

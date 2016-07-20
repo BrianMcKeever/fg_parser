@@ -1,7 +1,8 @@
 const {ipcMain} = require('electron');
 const {dialog} = require('electron');
 const fs = require('fs');
-const ejs = require("ejs");
+const {BrowserWindow} = require('electron')
+const lib = require("./lib.js");
 
 ipcMain.on('saveConfig', (event, arg) => {
     var path = dialog.showSaveDialog({
@@ -27,58 +28,14 @@ ipcMain.on('loadConfig', (event, arg) => {
     event.returnValue = data;
 });
 
+let parseWindow;
+ipcMain.on('parse', (event, arg) => {
+    //parseWindow = new BrowserWindow({width: 800, height: 600, resizable: false});
+     // parseWindow.loadURL(`file://${__dirname}/parse_window.html`);
 
-ipcMain.on('input-path', (event, arg) => {
-    console.log(arg);  // prints "ping"
-    event.sender.send('asynchronous-reply', 'pong');
+      //parseWindow.on('closed', () => {
+       // parseWindow = null;
+      //});
+    lib.parse(arg);
+    event.returnValue = null;
 });
-
-ipcMain.on('synchronous-message', (event, arg) => {
-    console.log(arg);  // prints "ping"
-    event.returnValue = 'pong';
-});
-
-function test(path){
-    console.log(path);
-    var homePath = app.getPath("desktop");
-    var fs = require('fs');
-    var parserOutputLocation = homePath + "/fg_parser_output.zip";
-    if(fs.stat(parserOutputLocation, function(error, stats){
-        if(error){
-            if(error.code != "ENOENT"){
-                console.log(error);
-                return;
-            } // else output file exists
-        } else if(stats.isFile()){
-            fs.unlinkSync(parserOutputLocation);
-        } else {
-            console.log("parserOutputLocation is weird");
-        }
-    }));
-
-    var JSZip = require("jszip");
-    var zip = new JSZip();
-    zip.file("Hello.txt", "Hello World\n");
-    var img = zip.folder("images");
-    zip
-        .generateNodeStream({type:'nodebuffer',streamFiles:true})
-        .pipe(fs.createWriteStream(parserOutputLocation))
-        .on('finish', function () {
-            // JSZip generates a readable stream with a "end" event,
-            // but is piped here in a writable stream which emits a "finish" event.
-            console.log("fg_parser_output.zip written.");
-        });
-
-    global.fg_parser = true
-}
-
-function createDefinitionString(moduleName, moduleCategory, moduleAuthor){
-    var definitionTemplate = fs.readFileSync("template/definition.ejs").toString();
-    var definitionData = {
-        moduleName: moduleName,
-        moduleCategory: moduleCategory,
-        moduleAuthor: moduleAuthor
-    };
-    var definitionString = ejs.render(definitionTemplate, definitionData);
-    return definitionString;
-}

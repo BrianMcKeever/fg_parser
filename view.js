@@ -1,18 +1,6 @@
 document.addEventListener("DOMContentLoaded", function(){
     // Module to control application life.
     const {ipcRenderer} = require('electron');
-    function processButton(){
-        var fileToLoad = document.getElementById("input").files[0];
-        var path = fileToLoad.path;
-        console.log(ipcRenderer.sendSync('synchronous-message', path));
-    }
-
-    console.log(ipcRenderer.sendSync('synchronous-message', 'ping')); // prints "pong"
-
-    ipcRenderer.on('asynchronous-reply', (event, arg) => {
-        console.log(arg); // prints "pong"
-    });
-    ipcRenderer.send('input-path', 'ping');
 
     var newButton  = document.getElementById("newButton");
     var loadButton = document.getElementById("loadButton");
@@ -23,12 +11,13 @@ document.addEventListener("DOMContentLoaded", function(){
     var moduleAuthorInput   = document.getElementById("moduleAuthorInput");
 
     var inputFolderPathInput  = document.getElementById("inputPathInput");
-    var outputFolderPathInput = document.getElementById("outputPathInput");
+    var outputPathInput = document.getElementById("outputPathInput");
 
     var moduleTypeGMRadio       = document.getElementById("moduleTypeGMRadio");
     var moduleTypeGMPlayerRadio = document.getElementById("moduleTypeGMPlayerRadio");
     var moduleTypeCommonRadio   = document.getElementById("moduleTypeCommonRadio");
 
+    var thumbnailCheckbox     = document.getElementById("thumbnailCheckbox");
     var fileClassCheckbox     = document.getElementById("fileClassCheckbox");
     var fileEquipmentCheckbox = document.getElementById("fileEquipmentCheckbox");
     var fileFeatsCheckbox     = document.getElementById("fileFeatsCheckbox");
@@ -37,9 +26,13 @@ document.addEventListener("DOMContentLoaded", function(){
     var fileSpellsCheckbox    = document.getElementById("fileSpellsCheckbox");
     var fileTokensCheckbox    = document.getElementById("fileTokensCheckbox");
 
+    var parseButton = document.getElementById("parseButton");
+
     newButton.onclick = onNewButtonPress;
     loadButton.onclick = onLoadButtonPress;
     saveButton.onclick = onSaveButtonPress;
+
+    parseButton.onclick = onParse;
 
     function onNewButtonPress(){
         moduleNameInput.value     = "";
@@ -47,16 +40,17 @@ document.addEventListener("DOMContentLoaded", function(){
         moduleAuthorInput.value   = "";
 
         inputFolderPathInput.value  = "";
-        outputFolderPathInput.value = "";
+        outputPathInput.value = "";
 
         moduleTypeGMRadio.checked = true;
 
+        thumbnailCheckbox.checked     = false;
         fileClassCheckbox.checked     = false;
         fileEquipmentCheckbox.checked = false;
         fileFeatsCheckbox.checked     = false;
         fileNPCsCheckbox.checked      = false;
         fileRacesCheckbox.checked     = false;
-        fileSpellsCheckbox.checked    = true;
+        fileSpellsCheckbox.checked    = false;
         fileTokensCheckbox.checked    = false;
     }
 
@@ -69,7 +63,7 @@ document.addEventListener("DOMContentLoaded", function(){
         moduleAuthorInput.value   = data.moduleAuthor;
 
         inputFolderPathInput.value  = data.inputFolderPath;
-        outputFolderPathInput.value = data.outputFolderPath;
+        outputPathInput.value = data.outputPath;
 
         moduleTypeGMRadio.checked       = false;
         moduleTypeGMPlayerRadio.checked = false;
@@ -83,6 +77,7 @@ document.addEventListener("DOMContentLoaded", function(){
             moduleTypeCommonRadio.checked = true;
         }
 
+        thumbnailCheckbox.checked     = data.thumbnail;
         fileClassCheckbox.checked     = data.classes;
         fileEquipmentCheckbox.checked = data.equipment;
         fileFeatsCheckbox.checked     = data.feats;
@@ -93,6 +88,11 @@ document.addEventListener("DOMContentLoaded", function(){
     }
 
     function onSaveButtonPress(){
+        var data = gatherConfigData();
+        ipcRenderer.sendSync('saveConfig', data);
+    }
+
+    function gatherConfigData(){
         var moduleType;
         if(moduleTypeGMRadio.checked === true){
             moduleType = "GM only";
@@ -107,11 +107,12 @@ document.addEventListener("DOMContentLoaded", function(){
             "moduleCategory": moduleCategoryInput.value,
             "moduleAuthor":   moduleAuthorInput.value,
 
-            "inputFolderPath":  inputFolderPathInput.value,
-            "outputFolderPath": outputFolderPathInput.value,
+            "inputFolderPath": inputFolderPathInput.value,
+            "outputPath":      outputPathInput.value,
 
             "moduleType": moduleType,
 
+            "thumbnail":   thumbnailCheckbox.checked,
             "classes":   fileClassCheckbox.checked,
             "equipment": fileEquipmentCheckbox.checked,
             "feats":     fileFeatsCheckbox.checked,
@@ -120,6 +121,11 @@ document.addEventListener("DOMContentLoaded", function(){
             "spells":    fileSpellsCheckbox.checked,
             "tokens":    fileTokensCheckbox.checked
         }
-        ipcRenderer.sendSync('saveConfig', data);
+        return data;
+    }
+
+    function onParse(){
+        var data = gatherConfigData();
+        ipcRenderer.sendSync('parse', data);
     }
 }, false);
