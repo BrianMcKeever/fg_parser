@@ -12,6 +12,7 @@
     "dependencies" :
     {
         "bootstrap": "3.3.6",
+        "ejs": "2.4.2",
         "jszip" : "3.0.0"
     }
 }

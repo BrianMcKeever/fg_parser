@@ -1,6 +1,7 @@
 const {ipcMain} = require('electron');
 const {dialog} = require('electron');
 const fs = require('fs');
+const ejs = require("ejs");
 
 ipcMain.on('saveConfig', (event, arg) => {
     var path = dialog.showSaveDialog({
@@ -71,3 +72,13 @@ function test(path){
     global.fg_parser = true
 }
 
+function createDefinitionString(moduleName, moduleCategory, moduleAuthor){
+    var definitionTemplate = fs.readFileSync("template/definition.ejs").toString();
+    var definitionData = {
+        moduleName: moduleName,
+        moduleCategory: moduleCategory,
+        moduleAuthor: moduleAuthor
+    };
+    var definitionString = ejs.render(definitionTemplate, definitionData);
+    return definitionString;
+}

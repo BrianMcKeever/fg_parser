@@ -1,0 +1,600 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<root version="3.1" release="7|CoreRPG:3">
+    <% if(encounters) { %>
+	<battle>
+        <category name="" mergeid="<%= moduleMergeId %>" baseicon="0" decalicon="0">
+			<id-00001>
+				<cr type="string">41</cr>
+				<exp type="number">43</exp>
+				<locked type="number">0</locked>
+				<name type="string">encounter name</name>
+				<npclist>
+					<id-00001>
+						<count type="number">1</count>
+						<link type="windowreference">
+							<class>npc</class>
+							<recordname>npc.id-00001</recordname>
+						</link>
+						<maplink>
+							<id-00001>
+								<imageref type="windowreference">
+									<class></class>
+									<recordname></recordname>
+								</imageref>
+								<imagex type="number">0</imagex>
+								<imagey type="number">0</imagey>
+							</id-00001>
+						</maplink>
+						<name type="string">npc name</name>
+                        <token type="token">tokens/host/dragonborn-female3.png@<%= moduleName %></token>
+					</id-00001>
+				</npclist>
+			</id-00001>
+		</category>
+	</battle>
+    <% } %>
+    <% if(stories) { %>
+	<encounter>
+        <category name="" mergeid="<%= moduleMergeId %>" baseicon="0" decalicon="0">
+			<id-00001>
+				<locked type="number">0</locked>
+				<name type="string">story name</name>
+				<text type="formattedtext">
+					<p>story description</p>
+					<h>header font</h>
+					<frame>chatbox text</frame>
+					<list>
+						<li>bullet point</li>
+					</list>
+					<linklist>
+						<link class="" recordname="">link text</link>
+					</linklist>
+					<table>
+						<tr>
+							<td>tablet row text maybe</td>
+						</tr>
+					</table>
+					<p></p>
+				</text>
+			</id-00001>
+			<id-00002>
+				<locked type="number">0</locked>
+				<name type="string">story2 name</name>
+				<text type="formattedtext">
+					<p>story2 text</p>
+				</text>
+			</id-00002>
+		</category>
+	</encounter>
+    <% } %>
+    <% if(images) { %>
+	<image>
+        <category name="first image tab" mergeid="<%= moduleMergeId %>" baseicon="0" decalicon="0">
+			<id-00001>
+				<image type="image">
+					<bitmap>0AD1O39.jpg</bitmap>
+				</image>
+				<name type="string">image name</name>
+			</id-00001>
+			<id-00002>
+				<image type="image">
+					<bitmap>0JjKv6E.jpg</bitmap>
+				</image>
+				<name type="string">0JjKv6E</name>
+			</id-00002>
+		</category>
+	</image>
+    <% } %>
+    <% if(items) { %>
+	<item>
+        <category name="" mergeid="<%= moduleMergeId %>" baseicon="0" decalicon="0">
+			<id-00001>
+				<ac type="number">0</ac>
+				<bonus type="number">0</bonus>
+				<cost type="string">cost</cost>
+				<description type="formattedtext">
+					<p>item description</p>
+				</description>
+				<isidentified type="number">0</isidentified>
+				<istemplate type="number">0</istemplate>
+				<locked type="number">0</locked>
+				<name type="string">item name</name>
+				<nonid_name type="string">item non-id name</nonid_name>
+				<nonidentified type="string">item notes</nonidentified>
+				<rarity type="string">item rarity</rarity>
+				<subtype type="string">item subtype</subtype>
+				<type type="string">item type</type>
+				<weight type="number">13</weight>
+			</id-00001>
+			<id-00002>
+				<ac type="number">0</ac>
+				<bonus type="number">0</bonus>
+				<description type="formattedtext">
+					<p></p>
+				</description>
+				<isidentified type="number">0</isidentified>
+				<istemplate type="number">0</istemplate>
+				<locked type="number">0</locked>
+				<name type="string">item 2 name</name>
+				<nonid_name type="string">item 2 non-id name</nonid_name>
+				<nonidentified type="string">item 2 notes</nonidentified>
+				<rarity type="string">item 2 rarity</rarity>
+				<subtype type="string">item 2 subtype</subtype>
+				<type type="string">item 2 type</type>
+				<weight type="number">0</weight>
+			</id-00002>
+		</category>
+	</item>
+    <% } %>
+	<library>
+		<modulename static="true">
+            <categoryname type="string"><%= moduleCategory %></categoryname>
+            <name type="string"><%= moduleName %></name>
+			<entries>
+                <% if(encounters) { %>
+				<battle>
+					<librarylink type="windowreference">
+						<class>referenceindexsorted</class>
+                        <recordname>lists.battle@<%= moduleName %></recordname>
+					</librarylink>
+					<name type="string">Encounters</name>
+				</battle>
+                <% } %>
+                <% if(stories) { %>
+				<encounter>
+					<librarylink type="windowreference">
+						<class>referenceindexsorted</class>
+                        <recordname>lists.encounter@<%= moduleName %></recordname>
+					</librarylink>
+					<name type="string">Story</name>
+				</encounter>
+                <% } %>
+                <% if(images) { %>
+				<imagewindow>
+					<librarylink type="windowreference">
+						<class>referenceindexsorted</class>
+                        <recordname>lists.imagewindow@<%= moduleName %></recordname>
+					</librarylink>
+					<name type="string">Images &#38; Maps</name>
+				</imagewindow>
+                <% } %>
+                <% if(items) { %>
+				<item>
+					<librarylink type="windowreference">
+						<class>referenceindexsorted</class>
+                        <recordname>lists.item@<%= moduleName %></recordname>
+					</librarylink>
+					<name type="string">Items</name>
+				</item>
+                <% } %>
+                <% if(npcs) { %>
+				<npc>
+					<librarylink type="windowreference">
+						<class>referenceindexsorted</class>
+                        <recordname>lists.npc@<%= moduleName %></recordname>
+					</librarylink>
+					<name type="string">Personalities</name>
+				</npc>
+                <% } %>
+                <% if(quests) { %>
+				<quest>
+					<librarylink type="windowreference">
+						<class>referenceindexsorted</class>
+                        <recordname>lists.quest@<%= moduleName %></recordname>
+					</librarylink>
+					<name type="string">Quests</name>
+				</quest>
+                <% } %>
+                <% if(tables) { %>
+				<table>
+					<librarylink type="windowreference">
+						<class>referenceindexsorted</class>
+                        <recordname>lists.table@<%= moduleName %></recordname>
+					</librarylink>
+					<name type="string">Tables</name>
+				</table>
+                <% } %>
+			</entries>
+		</modulename>
+	</library>
+	<lists>
+        <% if(stories) { %>
+		<battle>
+			<name type="string">Encounters</name>
+			<index>
+				<id-00001>
+					<listlink type="windowreference">
+						<class>battle</class>
+                        <recordname>battle.id-00001@<%= moduleName %></recordname>
+					</listlink>
+					<name type="string">encounter name</name>
+				</id-00001>
+			</index>
+		</battle>
+        <% } %>
+        <% if(encounters) { %>
+		<encounter>
+			<name type="string">Story</name>
+			<index>
+				<id-00001>
+					<listlink type="windowreference">
+						<class>encounter</class>
+                        <recordname>encounter.id-00001@<%= moduleName %></recordname>
+					</listlink>
+					<name type="string">story name</name>
+				</id-00001>
+				<id-00002>
+					<listlink type="windowreference">
+						<class>encounter</class>
+                        <recordname>encounter.id-00002@<%= moduleName %></recordname>
+					</listlink>
+					<name type="string">story2 name</name>
+				</id-00002>
+			</index>
+		</encounter>
+        <% } %>
+        <% if(images) { %>
+		<imagewindow>
+			<name type="string">Images &#38; Maps</name>
+			<index>
+				<id-00001>
+					<listlink type="windowreference">
+						<class>imagewindow</class>
+                        <recordname>image.id-00001@<%= moduleName %></recordname>
+					</listlink>
+					<name type="string">image name</name>
+				</id-00001>
+				<id-00002>
+					<listlink type="windowreference">
+						<class>imagewindow</class>
+                        <recordname>image.id-00002@<%= moduleName %></recordname>
+					</listlink>
+					<name type="string">0JjKv6E</name>
+				</id-00002>
+			</index>
+		</imagewindow>
+        <% } %>
+        <% if(items) { %>
+		<item>
+			<name type="string">Items</name>
+			<index>
+				<id-00001>
+					<listlink type="windowreference">
+						<class>item</class>
+                        <recordname>item.id-00001@<%= moduleName %></recordname>
+					</listlink>
+					<name type="string">item name</name>
+				</id-00001>
+				<id-00002>
+					<listlink type="windowreference">
+						<class>item</class>
+                        <recordname>item.id-00002@<%= moduleName %></recordname>
+					</listlink>
+					<name type="string">item 2 name</name>
+				</id-00002>
+			</index>
+		</item>
+        <% } %>
+        <% if(npcs) { %>
+		<npc>
+			<name type="string">Personalities</name>
+			<index>
+				<id-00001>
+					<listlink type="windowreference">
+						<class>npc</class>
+                        <recordname>npc.id-00001@<%= moduleName %></recordname>
+					</listlink>
+					<name type="string">npc name</name>
+				</id-00001>
+				<id-00002>
+					<listlink type="windowreference">
+						<class>npc</class>
+                        <recordname>npc.id-00002@<%= moduleName %></recordname>
+					</listlink>
+					<name type="string">npc2</name>
+				</id-00002>
+			</index>
+		</npc>
+        <% } %>
+        <% if(quests) { %>
+		<quest>
+			<name type="string">Quests</name>
+			<index>
+				<id-00001>
+					<listlink type="windowreference">
+						<class>quest</class>
+                        <recordname>quest.id-00001@<%= moduleName %></recordname>
+					</listlink>
+					<name type="string">quest name</name>
+				</id-00001>
+			</index>
+		</quest>
+        <% } %>
+        <% if(tables) { %>
+		<table>
+			<name type="string">Tables</name>
+			<index>
+				<id-00001>
+					<listlink type="windowreference">
+						<class>table</class>
+                        <recordname>tables.id-00001@<%= moduleName %></recordname>
+					</listlink>
+					<name type="string">table name</name>
+				</id-00001>
+				<id-00002>
+					<listlink type="windowreference">
+						<class>table</class>
+                        <recordname>tables.id-00002@<%= moduleName %></recordname>
+					</listlink>
+					<name type="string">table2</name>
+				</id-00002>
+			</index>
+		</table>
+        <% } %>
+	</lists>
+
+    <% if(npcs) { %>
+	<npc>
+        <category name="" mergeid="<%= moduleMergeId %>" baseicon="0" decalicon="0">
+			<id-00001>
+				<abilities>
+					<charisma>
+						<bonus type="number">10</bonus>
+						<score type="number">31</score>
+					</charisma>
+					<constitution>
+						<bonus type="number">6</bonus>
+						<score type="number">23</score>
+					</constitution>
+					<dexterity>
+						<bonus type="number">5</bonus>
+						<score type="number">21</score>
+					</dexterity>
+					<intelligence>
+						<bonus type="number">8</bonus>
+						<score type="number">27</score>
+					</intelligence>
+					<strength>
+						<bonus type="number">4</bonus>
+						<score type="number">19</score>
+					</strength>
+					<wisdom>
+						<bonus type="number">9</bonus>
+						<score type="number">29</score>
+					</wisdom>
+				</abilities>
+				<ac type="number">15</ac>
+				<actext type="string">npc armor description</actext>
+				<actions>
+					<id-00001>
+						<desc type="string">npc action description</desc>
+						<name type="string">npc action name</name>
+					</id-00001>
+				</actions>
+				<alignment type="string">npc alignment</alignment>
+				<conditionimmunities type="string">npc condition immunities</conditionimmunities>
+				<cr type="string">37</cr>
+				<damageimmunities type="string">npc immunities</damageimmunities>
+				<damageresistances type="string">npc resistances</damageresistances>
+				<damagevulnerabilities type="string">npc vulnerabilities</damagevulnerabilities>
+				<hd type="string">npc hit point description</hd>
+				<hp type="number">17</hp>
+				<innatespells>
+					<id-00001>
+						<desc type="string">npc innate spells description</desc>
+						<name type="string">npc innate spells</name>
+					</id-00001>
+				</innatespells>
+				<languages type="string">npc languages</languages>
+				<legendaryactions>
+					<id-00001>
+						<desc type="string">npc legendary action description</desc>
+						<name type="string">npc legendary action</name>
+					</id-00001>
+				</legendaryactions>
+				<locked type="number">0</locked>
+				<name type="string">npc name</name>
+				<reactions>
+					<id-00001>
+						<desc type="string">npc reaction description</desc>
+						<name type="string">npc reaction name</name>
+					</id-00001>
+				</reactions>
+				<savingthrows type="string">npc saving throws</savingthrows>
+				<senses type="string">npc senses</senses>
+				<size type="string">npc size</size>
+				<skills type="string">npc skills</skills>
+				<speed type="string">npc speed</speed>
+				<spells>
+					<id-00001>
+						<desc type="string">npc spell description</desc>
+						<name type="string">npc spell name</name>
+					</id-00001>
+				</spells>
+				<text type="formattedtext">
+					<p>npc other text box</p>
+				</text>
+                <token type="token">tokens/host/dragonborn-female3.png@<%= moduleName %></token>
+				<traits>
+					<id-00001>
+						<desc type="string">npc trait description</desc>
+						<name type="string">npc trait name</name>
+					</id-00001>
+				</traits>
+				<type type="string">npc type</type>
+				<xp type="number">39</xp>
+			</id-00001>
+			<id-00002>
+				<abilities>
+					<charisma>
+						<bonus type="number">0</bonus>
+						<score type="number">10</score>
+					</charisma>
+					<constitution>
+						<bonus type="number">0</bonus>
+						<score type="number">10</score>
+					</constitution>
+					<dexterity>
+						<bonus type="number">0</bonus>
+						<score type="number">10</score>
+					</dexterity>
+					<intelligence>
+						<bonus type="number">0</bonus>
+						<score type="number">10</score>
+					</intelligence>
+					<strength>
+						<bonus type="number">0</bonus>
+						<score type="number">10</score>
+					</strength>
+					<wisdom>
+						<bonus type="number">0</bonus>
+						<score type="number">10</score>
+					</wisdom>
+				</abilities>
+				<ac type="number">0</ac>
+				<actions>
+				</actions>
+				<hp type="number">0</hp>
+				<innatespells>
+				</innatespells>
+				<legendaryactions>
+				</legendaryactions>
+				<locked type="number">0</locked>
+				<name type="string">npc2</name>
+				<reactions>
+				</reactions>
+				<spells>
+				</spells>
+				<text type="formattedtext">
+				</text>
+				<token type="token"></token>
+				<traits>
+				</traits>
+				<xp type="number">0</xp>
+			</id-00002>
+		</category>
+	</npc>
+    <% } %>
+    <% if(quests) { %>
+	<quest>
+        <category name="" mergeid="<%= moduleMergeId %>" baseicon="0" decalicon="0">
+			<id-00001>
+				<cr type="string">41</cr>
+				<description type="formattedtext">
+					<p>quest description</p>
+				</description>
+				<locked type="number">0</locked>
+				<name type="string">quest name</name>
+				<xp type="number">47</xp>
+			</id-00001>
+		</category>
+	</quest>
+    <% } %>
+    <% if(tables) { %>
+	<tables>
+        <category name="" mergeid="<%= moduleMergeId %>" baseicon="0" decalicon="0">
+			<id-00001>
+				<description type="string">table description</description>
+				<dice type="dice"></dice>
+				<hiderollresults type="number">0</hiderollresults>
+				<locked type="number">0</locked>
+				<mod type="number">0</mod>
+				<name type="string">table name</name>
+				<notes type="formattedtext">
+				</notes>
+				<resultscols type="number">1</resultscols>
+				<table_positionoffset type="number">0</table_positionoffset>
+				<tablerows>
+					<id-00001>
+						<fromrange type="number">1</fromrange>
+						<results>
+							<id-00001>
+								<result type="string">table option 1</result>
+								<resultlink type="windowreference">
+									<class></class>
+									<recordname></recordname>
+								</resultlink>
+							</id-00001>
+						</results>
+						<torange type="number">1</torange>
+					</id-00001>
+					<id-00002>
+						<fromrange type="number">2</fromrange>
+						<results>
+							<id-00001>
+								<result type="string">table option 2</result>
+								<resultlink type="windowreference">
+									<class></class>
+									<recordname></recordname>
+								</resultlink>
+							</id-00001>
+						</results>
+						<torange type="number">2</torange>
+					</id-00002>
+				</tablerows>
+			</id-00001>
+			<id-00002>
+				<dice type="dice"></dice>
+				<hiderollresults type="number">0</hiderollresults>
+				<locked type="number">0</locked>
+				<mod type="number">0</mod>
+				<name type="string">table2</name>
+				<notes type="formattedtext">
+				</notes>
+				<resultscols type="number">1</resultscols>
+				<table_positionoffset type="number">0</table_positionoffset>
+				<tablerows>
+					<id-00001>
+						<fromrange type="number">1</fromrange>
+						<results>
+							<id-00001>
+								<resultlink type="windowreference">
+									<class></class>
+									<recordname></recordname>
+								</resultlink>
+							</id-00001>
+						</results>
+						<torange type="number">4</torange>
+					</id-00001>
+					<id-00002>
+						<fromrange type="number">5</fromrange>
+						<results>
+							<id-00001>
+								<resultlink type="windowreference">
+									<class></class>
+									<recordname></recordname>
+								</resultlink>
+							</id-00001>
+						</results>
+						<torange type="number">8</torange>
+					</id-00002>
+					<id-00003>
+						<fromrange type="number">9</fromrange>
+						<results>
+							<id-00001>
+								<resultlink type="windowreference">
+									<class></class>
+									<recordname></recordname>
+								</resultlink>
+							</id-00001>
+						</results>
+						<torange type="number">12</torange>
+					</id-00003>
+					<id-00004>
+						<fromrange type="number">13</fromrange>
+						<results>
+							<id-00001>
+								<resultlink type="windowreference">
+									<class></class>
+									<recordname></recordname>
+								</resultlink>
+							</id-00001>
+						</results>
+						<torange type="number">16</torange>
+					</id-00004>
+				</tablerows>
+			</id-00002>
+		</category>
+	</tables>
+    <% } %>
+</root>
