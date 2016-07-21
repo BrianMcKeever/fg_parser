@@ -136,6 +136,7 @@ document.addEventListener("DOMContentLoaded", function(){
 
     function onParse(){
         let data = gatherConfigData();
+        clearOutput();
         ipcRenderer.sendSync('parse', data);
         $('#navBar a[href="#outputTab"]').tab('show');
         disableControls();
@@ -150,8 +151,13 @@ document.addEventListener("DOMContentLoaded", function(){
         let li = document.createElement("li");
         li.className = className;
         li.innerHTML = message;
-        let outputPanel  = document.getElementById("outputList");
-        outputPanel.appendChild(li);
+        let outputList  = document.getElementById("outputList");
+        outputList.appendChild(li);
+    }
+
+    function clearOutput(){
+        let outputList  = document.getElementById("outputList");
+        outputList.innerHTML = "";
     }
 
     ipcRenderer.on("logParseError", function(event, args){

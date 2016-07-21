@@ -31,8 +31,10 @@ exports.parse = function parse(parseData, onSuccess, onError, onDone){
     zip.append(definitionString, {name: "definition.xml"});
 
     if(parseData.thumbnail){
-        let thumbnailPath = parseData.inputFolderPath + "/thumbnail.png";
-        zip.append(fs.createReadStream(thumbnailPath), {name: "thumbnail.png"});
+        let thumbnailPath = parseData.inputFolderPath + "\\thumbnail.png";
+        if(checkFileExists(thumbnailPath, onError)){
+            zip.append(fs.createReadStream(thumbnailPath), {name: "thumbnail.png"});
+        }
     }
 
     let dbString = createDBString(parseData, onSuccess, onError);
@@ -62,19 +64,180 @@ function createDBString(parseData, onSuccess, onError){
     let dbTemplate = fs.readFileSync("template/db.ejs").toString();
     let data = deepCopy(parseData);
     data.moduleMergeId = createMergeId(data.moduleName);
-    data.encounters = null;
-    data.stories = null;
-    data.images = null;
-    data.items = loadItems(data.inputFolderPath, onSuccess, onError);
-    data.npcs = null;
-    data.quests = null;
-    data.tables = null;
+
+    data.backgrounds =     loadBackgrounds(    parseData, onSuccess, onError);
+    data.classes =         loadClasses(        parseData, onSuccess, onError);
+    data.encounters =      loadEncounters(     parseData, onSuccess, onError);
+    data.items =           loadEquipment(      parseData, onSuccess, onError);
+    data.feats =           loadFeats(          parseData, onSuccess, onError);
+    data.images =          loadImages(         parseData, onSuccess, onError);
+    data.imagePins =       loadImagePins(      parseData, onSuccess, onError);
+    data.imageGrids =      loadImageGrids(     parseData, onSuccess, onError);
+    data.magicItems =      loadMagicItems(     parseData, onSuccess, onError);
+    data.npcs =            loadNPCs(           parseData, onSuccess, onError);
+    data.parcels =         loadParcels(        parseData, onSuccess, onError);
+    data.pregens =         loadPregens(        parseData, onSuccess, onError);
+    data.races =           loadRaces(          parseData, onSuccess, onError);
+    data.referenceManual = loadReferenceManual(parseData, onSuccess, onError);
+    data.quests =          loadQuests(         parseData, onSuccess, onError);
+    data.spells =          loadSpells(         parseData, onSuccess, onError);
+    data.stories =         loadStory(          parseData, onSuccess, onError);
+    data.tables =          loadTables(         parseData, onSuccess, onError);
+    data.tokens =          loadTokens(         parseData, onSuccess, onError);
     let dbString = ejs.render(dbTemplate, data);
     return dbString;
 }
 
-function loadItems(inputFolderPath, onSuccess, onError){
-    let itemsPath = inputFolderPath + "/equipment.txt";
+function loadClasses(parseData, onSuccess, onError){
+    if(!parseData.classes) return;
+    let path = parseData.inputFolderPath + "/classes.txt";
+    if(!checkFileExists(path, onError)){
+        return null;
+    }
+}
+
+function loadFeats(parseData, onSuccess, onError){
+    if(!parseData.feats) return;
+    let path = parseData.inputFolderPath + "/feats.txt";
+    if(!checkFileExists(path, onError)){
+        return null;
+    }
+}
+
+function loadNPCs(parseData, onSuccess, onError){
+    if(!parseData.npcs) return;
+    let path = parseData.inputFolderPath + "/npcs.txt";
+    if(!checkFileExists(path, onError)){
+        return null;
+    }
+}
+
+function loadRaces(parseData, onSuccess, onError){
+    if(!parseData.races) return;
+    let path = parseData.inputFolderPath + "/races.txt";
+    if(!checkFileExists(path, onError)){
+        return null;
+    }
+}
+
+function loadSpells(parseData, onSuccess, onError){
+    if(!parseData.spells) return;
+    let path = parseData.inputFolderPath + "/spells.txt";
+    if(!checkFileExists(path, onError)){
+        return null;
+    }
+}
+
+function loadTokens(parseData, onSuccess, onError){
+    if(!parseData.tokens) return;
+    let path = parseData.inputFolderPath + "/tokens.txt";
+    if(!checkFileExists(path, onError)){
+        return null;
+    }
+}
+
+function loadBackgrounds(parseData, onSuccess, onError){
+    if(!parseData.backgrounds) return;
+    let path = parseData.inputFolderPath + "/backgrounds.txt";
+    if(!checkFileExists(path, onError)){
+        return null;
+    }
+}
+
+function loadEncounters(parseData, onSuccess, onError){
+    if(!parseData.encounters) return;
+    let path = parseData.inputFolderPath + "/encounters.txt";
+    if(!checkFileExists(path, onError)){
+        return null;
+    }
+}
+
+function loadImageGrids(parseData, onSuccess, onError){
+    if(!parseData.imageGrids) return;
+    let path = parseData.inputFolderPath + "/imagegrids.txt";
+    if(!checkFileExists(path, onError)){
+        return null;
+    }
+}
+
+function loadImagePins(parseData, onSuccess, onError){
+    if(!parseData.imagePins) return;
+    let path = parseData.inputFolderPath + "/imagepins.txt";
+    if(!checkFileExists(path, onError)){
+        return null;
+    }
+}
+
+function loadImages(parseData, onSuccess, onError){
+    if(!parseData.images) return;
+    let path = parseData.inputFolderPath + "/images.txt";
+    if(!checkFileExists(path, onError)){
+        return null;
+    }
+}
+
+function loadMagicItems(parseData, onSuccess, onError){
+    if(!parseData.magicItems) return;
+    let path = parseData.inputFolderPath + "/magicitems.txt";
+    if(!checkFileExists(path, onError)){
+        return null;
+    }
+}
+
+function loadParcels(parseData, onSuccess, onError){
+    if(!parseData.parcels) return;
+    let path = parseData.inputFolderPath + "/parcels.txt";
+    if(!checkFileExists(path, onError)){
+        return null;
+    }
+}
+
+function loadPregens(parseData, onSuccess, onError){
+    if(!parseData.pregens) return;
+    let path = parseData.inputFolderPath + "/pregens.txt";
+    if(!checkFileExists(path, onError)){
+        return null;
+    }
+}
+
+function loadReferenceManual(parseData, onSuccess, onError){
+    if(!parseData.referenceManual) return;
+    let path = parseData.inputFolderPath + "/referencemanual.txt";
+    if(!checkFileExists(path, onError)){
+        return null;
+    }
+}
+
+function loadQuests(parseData, onSuccess, onError){
+    if(!parseData.quests) return;
+    let path = parseData.inputFolderPath + "/quests.txt";
+    if(!checkFileExists(path, onError)){
+        return null;
+    }
+}
+
+function loadStory(parseData, onSuccess, onError){
+    if(!parseData.story) return;
+    let path = parseData.inputFolderPath + "/story.txt";
+    if(!checkFileExists(path, onError)){
+        return null;
+    }
+}
+
+function loadTables(parseData, onSuccess, onError){
+    if(!parseData.tables) return;
+    let path = parseData.inputFolderPath + "/tables.txt";
+    if(!checkFileExists(path, onError)){
+        return null;
+    }
+}
+
+function loadEquipment(parseData, onSuccess, onError){
+    if(!parseData.equipment) return;
+    let itemsPath = parseData.inputFolderPath + "/equipment.txt";
+    if(!checkFileExists(itemsPath, onError)){
+        return null;
+    }
     let lineReader = require('readline').createInterface({
         input: require('fs').createReadStream(itemsPath)
     });
@@ -195,9 +358,10 @@ function loadItems(inputFolderPath, onSuccess, onError){
         }
     });
     lineReader.on('close', function () {
-        console.log(equipmentTableData);
+        //console.log(equipmentTableData);
     });
 
+    /*
     let item = {
         id: "00001",
         weight: 5,
@@ -242,12 +406,13 @@ function loadItems(inputFolderPath, onSuccess, onError){
         strengthRequirement: 0,
         properties: ""
     };
-    let validationResult = model.validateItem(item);
+    validationResult = model.validateItem(item);
     if(validationResult === undefined){
         items.push(item);
     } else {
         console.log(validationResult);
     }
+    */
     return items;
 }
 
@@ -280,4 +445,15 @@ function camelize(str) {
     return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function(letter, index) {
         return index == 0 ? letter.toLowerCase() : letter.toUpperCase();
     }).replace(/\s+/g, '');
+}
+
+function checkFileExists(path, onError){
+    try{
+        fs.accessSync(path, fs.R_OK);
+    }catch(err){
+        console.log(err);
+        onError(path + " either doesn't exist or is in a location unreadable to the program.");
+        return false;
+    }
+    return true;
 }
