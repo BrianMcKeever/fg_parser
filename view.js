@@ -113,13 +113,13 @@ document.addEventListener("DOMContentLoaded", function(){
             "moduleType": moduleType,
 
             "thumbnail":   thumbnailCheckbox.checked,
-            "classes":   fileClassCheckbox.checked,
-            "equipment": fileEquipmentCheckbox.checked,
-            "feats":     fileFeatsCheckbox.checked,
-            "npcs":      fileNPCsCheckbox.checked,
-            "races":     fileRacesCheckbox.checked,
-            "spells":    fileSpellsCheckbox.checked,
-            "tokens":    fileTokensCheckbox.checked
+            "classes":     fileClassCheckbox.checked,
+            "equipment":   fileEquipmentCheckbox.checked,
+            "feats":       fileFeatsCheckbox.checked,
+            "npcs":        fileNPCsCheckbox.checked,
+            "races":       fileRacesCheckbox.checked,
+            "spells":      fileSpellsCheckbox.checked,
+            "tokens":      fileTokensCheckbox.checked
         }
         return data;
     }

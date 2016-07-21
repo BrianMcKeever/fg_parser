@@ -15,6 +15,15 @@ validate.validators.isArmor = function(value, options, key, attributes){
         }
         if(!validate.contains(attributes, "strengthRequirement")){
             message += "Armor " + name + " is missing strengthRequirement\n";
+        } else {
+            let strengthRequirement = attributes["strengthRequirement"];
+            if (strengthRequirement == "-"){
+                //nothing
+            } else if (validate.isInteger(strengthRequirement) && strengthRequirement >= 0){
+                //nothing
+            } else {
+                message += "Armor: " + name + "'s strength requirement is not - or a number >= 0\n";
+            }
         }
         if(!validate.contains(attributes, "properties")){
             message += "Armor " + name + " is missing properties\n";
@@ -53,9 +62,7 @@ var itemConstraints = {
         }
     },
     weight: {
-        numericality: {
-            greaterThanOrEqualTo: 0
-        }
+        presence: true,
     },
     type: {
         presence: true,
@@ -106,12 +113,13 @@ var itemConstraints = {
         }
     },
     strengthRequirement: {
-        numericality: {
-            greaterThanOrEqualTo: 0
-        }
+        //checked in isArmor
     },
     damage: {
-        format: "[0-9]+d?[0-9]+ (piercing|slashing|bludgeoning)"
+        format: "(([0-9]+d[0-9]+|[0-9]+) (piercing|slashing|bludgeoning)|-)"
+            //1d6 piercing
+            //1 piercing
+            //-
     },
     properties: {
     }

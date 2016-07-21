@@ -14,6 +14,7 @@
     "bootstrap": "3.3.6",
     "ejs": "2.4.2",
     "jquery": "2.2.4",
+    "run-series": "1.1.4",
     "validate.js": "0.10.0"
   }
 }
