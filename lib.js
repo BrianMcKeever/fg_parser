@@ -72,7 +72,130 @@ function createDBString(parseData){
 }
 
 function loadItems(inputFolderPath){
+    var itemsPath = inputFolderPath + "/equipment.txt";
+    var lineReader = require('readline').createInterface({
+        input: require('fs').createReadStream(itemsPath)
+    });
+
+    var itemLineRe = /^[ \w-'\(\)",]+\. [ \w-'\(\)",]+/;
+
     var items = [];
+    var itemsDictionary = {};
+    var idCounter = 1;
+
+    var pageNameRe = /^#@;.+/;
+    var tableHeaderRe = /^#th;.+/;
+    var typeHeaderRe = /^#st;.+/;
+
+    var equipmentTableData = {};
+    var lastTable = null;
+    var lastTableName = null;
+    var lastSubtable = null;
+    var lastSubtableName = null;
+    var finishedParsingTables = false;
+
+
+    //var equipmentTableData = {
+    //  "Adventuring Gear": {
+    //      columnNames: ["Name", "Cost", "Weight"],
+    //      "Amunition": [
+    //          ["Arrows", "1 gp", "0.05 lb"]
+    //      ]
+    //  }
+    //}
+    lineReader.on('line', function (line) {
+        if(finishedParsingTables){
+            if(itemLineRe.test(line)){
+                var data = line.split(". ")
+                var name = data.shift();
+                var description = data.join(". ");
+                if(itemsDictionary[name] === undefined){
+                    logError("Item not contained in any table: " + name);
+                    return;
+                }
+                itemsDictionary[name].name = name;
+                itemsDictionary[name].description = description;
+                itemsDictionary[name].isLocked = 1;
+                itemsDictionary[name].isTemplate = 0;
+                itemsDictionary[name].isIdentified = 1;
+                itemsDictionary[name].id = formatID(idCounter);
+                idCounter++;
+                var validationResult = model.validateItem(itemsDictionary[name]);
+                if(validationResult !== undefined){
+                    logError("Item failed validation: " + name + " " + JSON.stringify(validationResult));
+                }
+                logSuccess("Item description loaded - " + name);
+            } else {
+                logError("Item line has wrong format or invalid characters- " + line);
+            }
+
+        } else {
+            if(pageNameRe.test(line)){
+                lastTableName = line.split(";")[1];
+                if(equipmentTableData[lastTableName] !== undefined){
+                    logError("duplicate table name - " + lastTableName);
+                    return
+                }
+                lastTable = {};
+                lastSubtable = null;
+
+                equipmentTableData[lastTableName] = lastTable;
+            } else if (tableHeaderRe.test(line)){
+                if(lastTable === null){
+                    logError("Can't add header to unknown table - " + line);
+                    return;
+                }
+                if(lastTable.columnNames !== undefined){
+                    logError("Can't add header to table with header - " + line);
+                    return;
+                }
+                lastTable.columnNames = line.split(";");
+                lastTable.columnNames.shift(); //discarding "#th"
+                var columnSet = new Set(lastTable.columnNames);
+                if(lastTable.columnNames.length != columnSet.size){
+                    logError("Duplicate column names - " + line);
+                }
+            } else if (typeHeaderRe.test(line)){
+                lastSubtableName = line.split(";")[1];
+                if(lastTable === null){
+                    logError("Can't add subtable to unknown table - " + lastSubtableName);
+                    return;
+                }
+                if(lastTable[lastSubtableName] !== undefined){
+                    logError("duplicate subtable name - " + lastSubtableName);
+                    return;
+                }
+                lastSubtable = [];
+                lastTable[lastSubtableName] = lastSubtable;
+            } else if (line == ""){
+                finishedParsingTables = true;
+            } else {
+                if(lastSubtable === null){
+                    logError("Can't add item to unknown subtable - " + line);
+                    return
+                }
+                var row = line.split(";");
+                if(row.length == lastTable.columnNames.length){
+                    lastSubtable.push(row);
+                    logSuccess("Loaded item - " + row[0]);
+                    var item = {};
+                    itemsDictionary[row[0]] = item; //we're assuming the first column is the name
+                    var columns = lastTable.columnNames;
+                    for(var i = 0; i < columns.length; i++){
+                        item[columns[i]] = row[i];
+                    }
+                    item.type = lastTableName;
+                    item.subtype = lastSubtableName;
+                } else {
+                    logError("Wrong number of columns - " + line);
+                }
+            }
+        }
+    });
+    lineReader.on('close', function () {
+        console.log(equipmentTableData);
+    });
+
     var item = {
         id: "00001",
         weight: 5,
@@ -170,4 +293,20 @@ function createMergeId(moduleName){
     var mergeId = moduleName;
     mergeId = mergeId.replace(/[^\w]/gi, "");
     return mergeId;
+}
+
+function logError(errorString){
+    console.log(errorString);
+}
+
+function logSuccess(successString){
+    console.log(successString);
+}
+
+function formatID(id){
+    var result = "" + id;
+    while(result.length < 5){
+        result = "0" + result;
+    }
+    return result;
 }

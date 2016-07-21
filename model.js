@@ -60,7 +60,7 @@ var itemConstraints = {
     type: {
         presence: true,
         isWeapon: true,
-        isArmor: true
+        isArmor:  true
     },
     subtype: {
     },
