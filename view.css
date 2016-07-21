@@ -1,0 +1,13 @@
+
+#outputPanel {
+    height: 470px;
+    overflow: scroll;
+}
+
+li.alert-danger {
+    list-style-type: square;
+}
+
+li.alert-success {
+    list-style-type: circle;
+}

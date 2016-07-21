@@ -3,8 +3,9 @@ const archiver = require("archiver");
 const fs = require('fs');
 const validate = require("validate.js");
 const model = require("./model.js");
+const {ipcMain} = require('electron');
 
-exports.parse = function parse(parseData){
+exports.parse = function parse(parseData, onSuccess, onError, onDone){
 //        parseData = {
 //            "moduleName":     moduleNameInput.value,
 //            "moduleCategory": moduleCategoryInput.value,
@@ -34,14 +35,15 @@ exports.parse = function parse(parseData){
         zip.append(fs.createReadStream(thumbnailPath), {name: "thumbnail.png"});
     }
 
-    var dbString = createDBString(parseData);
+    var dbString = createDBString(parseData, onSuccess, onError);
     zip.append(dbString, {name: "db.xml"});
 
     var output = fs.createWriteStream(parseData.outputPath);
 
     output.on('close', function() {
-        console.log(zip.pointer() + ' total bytes');
-        console.log('zip has been finalized and the output file descriptor has closed.');
+        onSuccess(zip.pointer() + ' total bytes');
+        onSuccess('The module has been finished.');
+        onDone();
     });
 
     zip.on('error', function(err) {
@@ -56,14 +58,14 @@ function deepCopy(object){
     return JSON.parse(JSON.stringify(object));
 }
 
-function createDBString(parseData){
+function createDBString(parseData, onSuccess, onError){
     var dbTemplate = fs.readFileSync("template/db.ejs").toString();
     var data = deepCopy(parseData);
     data.moduleMergeId = createMergeId(data.moduleName);
     data.encounters = null;
     data.stories = null;
     data.images = null;
-    data.items = loadItems(data.inputFolderPath);
+    data.items = loadItems(data.inputFolderPath, onSuccess, onError);
     data.npcs = null;
     data.quests = null;
     data.tables = null;
@@ -71,13 +73,13 @@ function createDBString(parseData){
     return dbString;
 }
 
-function loadItems(inputFolderPath){
+function loadItems(inputFolderPath, onSuccess, onError){
     var itemsPath = inputFolderPath + "/equipment.txt";
     var lineReader = require('readline').createInterface({
         input: require('fs').createReadStream(itemsPath)
     });
 
-    var itemLineRe = /^[ \w-'\(\)",]+\. [ \w-'\(\)",]+/;
+    var itemLineRe = /^[ \w-'\(\)"+,:]+\.[ \w-'\(\)"+.:,]+/;
 
     var items = [];
     var itemsDictionary = {};
@@ -110,7 +112,7 @@ function loadItems(inputFolderPath){
                 var name = data.shift();
                 var description = data.join(". ");
                 if(itemsDictionary[name] === undefined){
-                    logError("Item not contained in any table: " + name);
+                    onError("Item not contained in any table: " + name);
                     return;
                 }
                 itemsDictionary[name].name = name;
@@ -122,19 +124,19 @@ function loadItems(inputFolderPath){
                 idCounter++;
                 var validationResult = model.validateItem(itemsDictionary[name]);
                 if(validationResult !== undefined){
-                    logError("Item failed validation: " + name + " " + JSON.stringify(validationResult));
+                    onError("Item failed validation: " + name + " " + JSON.stringify(validationResult));
                 }
-                logSuccess("Item description loaded - " + name);
+                onSuccess("Loaded item description - " + name);
             } else {
-                logError("Item line has wrong format or invalid characters- " + line);
+                onError("Item line has wrong format or invalid characters- " + line);
             }
 
         } else {
             if(pageNameRe.test(line)){
                 lastTableName = line.split(";")[1];
                 if(equipmentTableData[lastTableName] !== undefined){
-                    logError("duplicate table name - " + lastTableName);
-                    return
+                    onError("duplicate table name - " + lastTableName);
+                    return;
                 }
                 lastTable = {};
                 lastSubtable = null;
@@ -142,27 +144,27 @@ function loadItems(inputFolderPath){
                 equipmentTableData[lastTableName] = lastTable;
             } else if (tableHeaderRe.test(line)){
                 if(lastTable === null){
-                    logError("Can't add header to unknown table - " + line);
+                    onError("Can't add header to unknown table - " + line);
                     return;
                 }
                 if(lastTable.columnNames !== undefined){
-                    logError("Can't add header to table with header - " + line);
+                    onError("Can't add header to table with header - " + line);
                     return;
                 }
                 lastTable.columnNames = line.split(";");
                 lastTable.columnNames.shift(); //discarding "#th"
                 var columnSet = new Set(lastTable.columnNames);
                 if(lastTable.columnNames.length != columnSet.size){
-                    logError("Duplicate column names - " + line);
+                    onError("Duplicate column names - " + line);
                 }
             } else if (typeHeaderRe.test(line)){
                 lastSubtableName = line.split(";")[1];
                 if(lastTable === null){
-                    logError("Can't add subtable to unknown table - " + lastSubtableName);
+                    onError("Can't add subtable to unknown table - " + lastSubtableName);
                     return;
                 }
                 if(lastTable[lastSubtableName] !== undefined){
-                    logError("duplicate subtable name - " + lastSubtableName);
+                    onError("duplicate subtable name - " + lastSubtableName);
                     return;
                 }
                 lastSubtable = [];
@@ -171,13 +173,13 @@ function loadItems(inputFolderPath){
                 finishedParsingTables = true;
             } else {
                 if(lastSubtable === null){
-                    logError("Can't add item to unknown subtable - " + line);
+                    onError("Can't add item to unknown subtable - " + line);
                     return
                 }
                 var row = line.split(";");
                 if(row.length == lastTable.columnNames.length){
                     lastSubtable.push(row);
-                    logSuccess("Loaded item - " + row[0]);
+                    onSuccess("Loaded item row - " + row[0]);
                     var item = {};
                     itemsDictionary[row[0]] = item; //we're assuming the first column is the name
                     var columns = lastTable.columnNames;
@@ -187,7 +189,7 @@ function loadItems(inputFolderPath){
                     item.type = lastTableName;
                     item.subtype = lastSubtableName;
                 } else {
-                    logError("Wrong number of columns - " + line);
+                    onError("Wrong number of columns - " + line);
                 }
             }
         }
@@ -260,47 +262,10 @@ function createDefinitionString(moduleName, moduleCategory, moduleAuthor){
     return definitionString;
 }
 
-function test(path){
-    var homePath = app.getPath("desktop");
-    var parserOutputLocation = homePath + "/fg_parser_output.zip";
-    if(fs.stat(parserOutputLocation, function(error, stats){
-        if(error){
-            if(error.code != "ENOENT"){
-                console.log(error);
-                return;
-            } // else output file exists
-        } else if(stats.isFile()){
-            fs.unlinkSync(parserOutputLocation);
-        } else {
-            console.log("parserOutputLocation is weird");
-        }
-    }));
-
-    var zip = new JSZip();
-    zip.file("Hello.txt", "Hello World\n");
-    var img = zip.folder("images");
-    zip
-        .generateNodeStream({type:'nodebuffer',streamFiles:true})
-        .pipe(fs.createWriteStream(parserOutputLocation))
-        .on('finish', function () {
-            // JSZip generates a readable stream with a "end" event,
-            // but is piped here in a writable stream which emits a "finish" event.
-            console.log("fg_parser_output.zip written.");
-        });
-}
-
 function createMergeId(moduleName){
     var mergeId = moduleName;
     mergeId = mergeId.replace(/[^\w]/gi, "");
     return mergeId;
-}
-
-function logError(errorString){
-    console.log(errorString);
-}
-
-function logSuccess(successString){
-    console.log(successString);
 }
 
 function formatID(id){

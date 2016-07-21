@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function(){
     // Module to control application life.
-    const {ipcRenderer} = require('electron');
+    const {ipcRenderer} = nodeRequire('electron');
 
     var newButton  = document.getElementById("newButton");
     var loadButton = document.getElementById("loadButton");
@@ -124,8 +124,46 @@ document.addEventListener("DOMContentLoaded", function(){
         return data;
     }
 
+    function disableControls(){
+        $("input").attr("disabled", true);
+        $("button").attr("disabled", true);
+    }
+    
+    function enableControls(){
+        $("input").attr("disabled", false);
+        $("button").attr("disabled", false);
+    }
+
     function onParse(){
         var data = gatherConfigData();
         ipcRenderer.sendSync('parse', data);
+        $('#navBar a[href="#outputTab"]').tab('show');
+        disableControls();
     }
+
+    $('#navBar a').click(function (e) {
+        e.preventDefault();
+        $(this).tab('show');
+    });
+
+    function logItem(message, className){
+        var li = document.createElement("li");
+        li.className = className;
+        li.innerHTML = message;
+        var outputPanel  = document.getElementById("outputList");
+        outputPanel.appendChild(li);
+    }
+
+    ipcRenderer.on("logParseError", function(event, args){
+        logItem(args, "alert-danger");
+    });
+
+    ipcRenderer.on("logParseSuccess", function(event, args){
+        logItem(args, "alert-success");
+    });
+
+    ipcRenderer.on("parseDone", function(event, args){
+        enableControls();
+    });
+    
 }, false);

@@ -5,115 +5,142 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <!-- The above 2 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 <title>FG Parser</title>
-<script src="./view.js"></script>
+<script>
+  //have to delete this shit to allow jquery to work right
+  window.nodeRequire = require;
+  delete window.require;
+  delete window.exports;
+  delete window.module;
+</script>
+<script src="./node_modules/jquery/dist/jquery.js"></script>
 <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.css">
+<script src="./node_modules/bootstrap/dist/js/bootstrap.js"></script>
+<link rel="stylesheet" href="./view.css">
+<script src="./view.js"></script>
 </head>
 
-<body style="width:765px;">
-<div class="row">
-  <div class="col-xs-1">
+<body>
+<ul class="nav nav-tabs" role="tablist" id="navBar">
+  <li role="presentation" class="active"><a href="#settingsTab" aria-controls="settings" role="tab" data-toggle="tab">Settings</a></li>
+  <li role="presentation"><a href="#outputTab" aria-controls="output" role="tab" data-toggle="tab">Output</a></li>
+</ul>
+
+<div class="tab-content">
+  <div role="tabpanel" class="tab-pane active" id="settingsTab">
+    <div class="row">
+      <div class="col-xs-1">
+      </div>
+      <div class="col-xs-5">
+        <button type="button" class="btn btn-default" id="newButton">New</button>
+        <button type="button" class="btn btn-default" id="loadButton">Load</button>
+        <button type="button" class="btn btn-default" id="saveButton">Save</button>
+        <form>
+          <div class="form-group">
+            <label for="moduleName">Module Name</label>
+            <input type="text" class="form-control" id="moduleNameInput" placeholder="My Book of Spells">
+          </div>
+          <div class="form-group">
+            <label for="moduleCategory">Module Category</label>
+            <input type="text" class="form-control" id="moduleCategoryInput" placeholder="Custom">
+          </div>
+          <div class="form-group">
+            <label for="moduleAuthor">Module Author</label>
+            <input type="text" class="form-control" id="moduleAuthorInput" placeholder="Rick Astley">
+          </div>
+          <div class="form-group">
+            <label for="inputPath">Input Folder Path</label>
+            <input type="text" class="form-control" id="inputPathInput" placeholder="C:\Users\YourUserName\FG_Modules\MyBookOfSpells\">
+            <p class="help-block">This is the file path to the location of a folder containing the input files you want to make into a module.</p>
+          </div>
+          <label for="outputPath">Output Path</label>
+          <input type="text" class="form-control" id="outputPathInput" placeholder="C:\Users\YourUserName\AppData\Roaming\Fantasy Grounds\modules\MyBookOfSpells.mod">
+          <p class="help-block">This is the file location where you want the module to appear. It should
+          end with the .mod file extension.</p>
+        </div>
+        <b>Module Type</b>
+        <div class="form-group">
+          <div class="radio-inline">
+            <label>
+              <input type="radio" name="optionsRadios" id="moduleTypeGMRadio" value="GM only" checked>
+              GM only
+            </label>
+          </div>
+          <div class="radio-inline">
+            <label>
+              <input type="radio" name="optionsRadios" id="moduleTypeGMPlayerRadio" value="GM/Player">
+              GM/Player
+            </label>
+          </div>
+          <div class="radio-inline">
+            <label>
+              <input type="radio" name="optionsRadios" id="moduleTypeCommonRadio" value="Common">
+              Common
+            </label>
+          </div>
+
+          <br/>
+          <b>Files to Include</b>
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" value="" id = "thumbnailCheckbox">
+              thumbnail.png
+            </label>
+          </div>
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" value="" id = "fileClassCheckbox">
+              classes.txt
+            </label>
+          </div>
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" value="" id = "fileEquipmentCheckbox">
+              equipment.txt
+            </label>
+          </div>
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" value="" id = "fileFeatsCheckbox">
+              feats.txt
+            </label>
+          </div>
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" value="" id = "fileNPCsCheckbox">
+              npcs.txt
+            </label>
+          </div>
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" value="" id = "fileRacesCheckbox">
+              races.txt
+            </label>
+          </div>
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" value="" id = "fileSpellsCheckbox">
+              spells.txt
+            </label>
+          </div>
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" value="" id = "fileTokensCheckbox">
+              tokens.txt
+            </label>
+          </div>
+
+          <button type="button" class="btn btn-default" id="parseButton">Parse</button>
+        </form>
+      </div>
+    </div>
   </div>
-  <div class="col-xs-5">
-    <button type="button" class="btn btn-default" id="newButton">New</button>
-    <button type="button" class="btn btn-default" id="loadButton">Load</button>
-    <button type="button" class="btn btn-default" id="saveButton">Save</button>
-    <form>
-      <div class="form-group">
-        <label for="moduleName">Module Name</label>
-        <input type="text" class="form-control" id="moduleNameInput" placeholder="My Book of Spells">
+  <div role="tabpanel" class="tab-pane" id="outputTab">
+    <div class="panel panel-default">
+      <div class="panel-body" id="outputPanel">
+        <ul id="outputList">
+        </ul>
       </div>
-      <div class="form-group">
-        <label for="moduleCategory">Module Category</label>
-        <input type="text" class="form-control" id="moduleCategoryInput" placeholder="Custom">
-      </div>
-      <div class="form-group">
-        <label for="moduleAuthor">Module Author</label>
-        <input type="text" class="form-control" id="moduleAuthorInput" placeholder="Rick Astley">
-      </div>
-      <div class="form-group">
-        <label for="inputPath">Input Folder Path</label>
-        <input type="text" class="form-control" id="inputPathInput" placeholder="C:\Users\YourUserName\FG_Modules\MyBookOfSpells\">
-        <p class="help-block">This is the file path to the location of a folder containing the input files you want to make into a module.</p>
-      </div>
-        <label for="outputPath">Output Path</label>
-        <input type="text" class="form-control" id="outputPathInput" placeholder="C:\Users\YourUserName\AppData\Roaming\Fantasy Grounds\modules\MyBookOfSpells.mod">
-        <p class="help-block">This is the file location where you want the module to appear. It should
-        end with the .mod file extension.</p>
-      </div>
-      <b>Module Type</b>
-      <div class="form-group">
-        <div class="radio-inline">
-          <label>
-            <input type="radio" name="optionsRadios" id="moduleTypeGMRadio" value="GM only" checked>
-            GM only
-          </label>
-        </div>
-        <div class="radio-inline">
-          <label>
-            <input type="radio" name="optionsRadios" id="moduleTypeGMPlayerRadio" value="GM/Player">
-            GM/Player
-          </label>
-        </div>
-        <div class="radio-inline">
-          <label>
-            <input type="radio" name="optionsRadios" id="moduleTypeCommonRadio" value="Common">
-            Common
-          </label>
-        </div>
-
-      <br/>
-      <b>Files to Include</b>
-      <div class="checkbox">
-        <label>
-          <input type="checkbox" value="" id = "thumbnailCheckbox">
-          thumbnail.png
-        </label>
-      </div>
-      <div class="checkbox">
-        <label>
-          <input type="checkbox" value="" id = "fileClassCheckbox">
-          classes.txt
-        </label>
-      </div>
-      <div class="checkbox">
-        <label>
-          <input type="checkbox" value="" id = "fileEquipmentCheckbox">
-          equipment.txt
-        </label>
-      </div>
-      <div class="checkbox">
-        <label>
-          <input type="checkbox" value="" id = "fileFeatsCheckbox">
-          feats.txt
-        </label>
-      </div>
-      <div class="checkbox">
-        <label>
-          <input type="checkbox" value="" id = "fileNPCsCheckbox">
-          npcs.txt
-        </label>
-      </div>
-      <div class="checkbox">
-        <label>
-          <input type="checkbox" value="" id = "fileRacesCheckbox">
-          races.txt
-        </label>
-      </div>
-      <div class="checkbox">
-        <label>
-          <input type="checkbox" value="" id = "fileSpellsCheckbox">
-          spells.txt
-        </label>
-      </div>
-      <div class="checkbox">
-        <label>
-          <input type="checkbox" value="" id = "fileTokensCheckbox">
-          tokens.txt
-        </label>
-      </div>
-
-      <button type="button" class="btn btn-default" id="parseButton">Parse</button>
-    </form>
+    </div>
   </div>
 </div>
 </body>
