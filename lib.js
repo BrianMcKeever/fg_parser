@@ -25,20 +25,20 @@ exports.parse = function parse(parseData, onSuccess, onError, onDone){
 //            "spells":    fileSpellsCheckbox.checked,
 //            "tokens":    fileTokensCheckbox.checked
 //        }
-    var definitionString = createDefinitionString(parseData.moduleName, parseData.moduleCategory, parseData.moduleAuthor);
+    let definitionString = createDefinitionString(parseData.moduleName, parseData.moduleCategory, parseData.moduleAuthor);
 
-    var zip = new archiver.create("zip");
+    let zip = new archiver.create("zip");
     zip.append(definitionString, {name: "definition.xml"});
 
     if(parseData.thumbnail){
-        var thumbnailPath = parseData.inputFolderPath + "/thumbnail.png";
+        let thumbnailPath = parseData.inputFolderPath + "/thumbnail.png";
         zip.append(fs.createReadStream(thumbnailPath), {name: "thumbnail.png"});
     }
 
-    var dbString = createDBString(parseData, onSuccess, onError);
+    let dbString = createDBString(parseData, onSuccess, onError);
     zip.append(dbString, {name: "db.xml"});
 
-    var output = fs.createWriteStream(parseData.outputPath);
+    let output = fs.createWriteStream(parseData.outputPath);
 
     output.on('close', function() {
         onSuccess(zip.pointer() + ' total bytes');
@@ -59,8 +59,8 @@ function deepCopy(object){
 }
 
 function createDBString(parseData, onSuccess, onError){
-    var dbTemplate = fs.readFileSync("template/db.ejs").toString();
-    var data = deepCopy(parseData);
+    let dbTemplate = fs.readFileSync("template/db.ejs").toString();
+    let data = deepCopy(parseData);
     data.moduleMergeId = createMergeId(data.moduleName);
     data.encounters = null;
     data.stories = null;
@@ -69,35 +69,35 @@ function createDBString(parseData, onSuccess, onError){
     data.npcs = null;
     data.quests = null;
     data.tables = null;
-    var dbString = ejs.render(dbTemplate, data);
+    let dbString = ejs.render(dbTemplate, data);
     return dbString;
 }
 
 function loadItems(inputFolderPath, onSuccess, onError){
-    var itemsPath = inputFolderPath + "/equipment.txt";
-    var lineReader = require('readline').createInterface({
+    let itemsPath = inputFolderPath + "/equipment.txt";
+    let lineReader = require('readline').createInterface({
         input: require('fs').createReadStream(itemsPath)
     });
 
-    var itemLineRe = /^[ \w-'\(\)"+,:]+\.[ \w-'\(\)"+.:,]+/;
+    let itemLineRe = /^[ \w-'\(\)"+,:]+\.[ \w-'\(\)"+.:,]+/;
 
-    var items = [];
-    var itemsDictionary = {};
-    var idCounter = 1;
+    let items = [];
+    let itemsDictionary = {};
+    let idCounter = 1;
 
-    var pageNameRe = /^#@;.+/;
-    var tableHeaderRe = /^#th;.+/;
-    var typeHeaderRe = /^#st;.+/;
+    let pageNameRe = /^#@;.+/;
+    let tableHeaderRe = /^#th;.+/;
+    let typeHeaderRe = /^#st;.+/;
 
-    var equipmentTableData = {};
-    var lastTable = null;
-    var lastTableName = null;
-    var lastSubtable = null;
-    var lastSubtableName = null;
-    var finishedParsingTables = false;
+    let equipmentTableData = {};
+    let lastTable = null;
+    let lastTableName = null;
+    let lastSubtable = null;
+    let lastSubtableName = null;
+    let finishedParsingTables = false;
 
 
-    //var equipmentTableData = {
+    //let equipmentTableData = {
     //  "Adventuring Gear": {
     //      columnNames: ["Name", "Cost", "Weight"],
     //      "Amunition": [
@@ -108,9 +108,9 @@ function loadItems(inputFolderPath, onSuccess, onError){
     lineReader.on('line', function (line) {
         if(finishedParsingTables){
             if(itemLineRe.test(line)){
-                var data = line.split(". ")
-                var name = data.shift();
-                var description = data.join(". ");
+                let data = line.split(". ")
+                let name = data.shift();
+                let description = data.join(". ");
                 if(itemsDictionary[name] === undefined){
                     onError("Item not contained in any table: " + name);
                     return;
@@ -122,7 +122,7 @@ function loadItems(inputFolderPath, onSuccess, onError){
                 itemsDictionary[name].isIdentified = 1;
                 itemsDictionary[name].id = formatID(idCounter);
                 idCounter++;
-                var validationResult = model.validateItem(itemsDictionary[name]);
+                let validationResult = model.validateItem(itemsDictionary[name]);
                 if(validationResult !== undefined){
                     onError("Item failed validation: " + name + " " + JSON.stringify(validationResult));
                 }
@@ -153,7 +153,7 @@ function loadItems(inputFolderPath, onSuccess, onError){
                 }
                 lastTable.columnNames = line.split(";");
                 lastTable.columnNames.shift(); //discarding "#th"
-                var columnSet = new Set(lastTable.columnNames);
+                let columnSet = new Set(lastTable.columnNames);
                 if(lastTable.columnNames.length != columnSet.size){
                     onError("Duplicate column names - " + line);
                 }
@@ -176,14 +176,14 @@ function loadItems(inputFolderPath, onSuccess, onError){
                     onError("Can't add item to unknown subtable - " + line);
                     return
                 }
-                var row = line.split(";");
+                let row = line.split(";");
                 if(row.length == lastTable.columnNames.length){
                     lastSubtable.push(row);
                     onSuccess("Loaded item row - " + row[0]);
-                    var item = {};
+                    let item = {};
                     itemsDictionary[row[0]] = item; //we're assuming the first column is the name
-                    var columns = lastTable.columnNames;
-                    for(var i = 0; i < columns.length; i++){
+                    let columns = lastTable.columnNames;
+                    for(let i = 0; i < columns.length; i++){
                         item[columns[i]] = row[i];
                     }
                     item.type = lastTableName;
@@ -198,7 +198,7 @@ function loadItems(inputFolderPath, onSuccess, onError){
         console.log(equipmentTableData);
     });
 
-    var item = {
+    let item = {
         id: "00001",
         weight: 5,
         type: "weapon",
@@ -216,7 +216,7 @@ function loadItems(inputFolderPath, onSuccess, onError){
         damage: "1d6 slashing",
         properties: "light"
     };
-    var validationResult = model.validateItem(item);
+    let validationResult = model.validateItem(item);
     if(validationResult === undefined){
         items.push(item);
     } else {
@@ -242,7 +242,7 @@ function loadItems(inputFolderPath, onSuccess, onError){
         strengthRequirement: 0,
         properties: ""
     };
-    var validationResult = model.validateItem(item);
+    let validationResult = model.validateItem(item);
     if(validationResult === undefined){
         items.push(item);
     } else {
@@ -252,26 +252,32 @@ function loadItems(inputFolderPath, onSuccess, onError){
 }
 
 function createDefinitionString(moduleName, moduleCategory, moduleAuthor){
-    var definitionTemplate = fs.readFileSync("template/definition.ejs").toString();
-    var definitionData = {
+    let definitionTemplate = fs.readFileSync("template/definition.ejs").toString();
+    let definitionData = {
         moduleName: moduleName,
         moduleCategory: moduleCategory,
         moduleAuthor: moduleAuthor
     };
-    var definitionString = ejs.render(definitionTemplate, definitionData);
+    let definitionString = ejs.render(definitionTemplate, definitionData);
     return definitionString;
 }
 
 function createMergeId(moduleName){
-    var mergeId = moduleName;
+    let mergeId = moduleName;
     mergeId = mergeId.replace(/[^\w]/gi, "");
     return mergeId;
 }
 
 function formatID(id){
-    var result = "" + id;
+    let result = "" + id;
     while(result.length < 5){
         result = "0" + result;
     }
     return result;
+}
+
+function camelize(str) {
+    return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function(letter, index) {
+        return index == 0 ? letter.toLowerCase() : letter.toUpperCase();
+    }).replace(/\s+/g, '');
 }

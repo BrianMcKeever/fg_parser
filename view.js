@@ -2,31 +2,31 @@ document.addEventListener("DOMContentLoaded", function(){
     // Module to control application life.
     const {ipcRenderer} = nodeRequire('electron');
 
-    var newButton  = document.getElementById("newButton");
-    var loadButton = document.getElementById("loadButton");
-    var saveButton = document.getElementById("saveButton");
+    let newButton  = document.getElementById("newButton");
+    let loadButton = document.getElementById("loadButton");
+    let saveButton = document.getElementById("saveButton");
 
-    var moduleNameInput     = document.getElementById("moduleNameInput");
-    var moduleCategoryInput = document.getElementById("moduleCategoryInput");
-    var moduleAuthorInput   = document.getElementById("moduleAuthorInput");
+    let moduleNameInput     = document.getElementById("moduleNameInput");
+    let moduleCategoryInput = document.getElementById("moduleCategoryInput");
+    let moduleAuthorInput   = document.getElementById("moduleAuthorInput");
 
-    var inputFolderPathInput  = document.getElementById("inputPathInput");
-    var outputPathInput = document.getElementById("outputPathInput");
+    let inputFolderPathInput  = document.getElementById("inputPathInput");
+    let outputPathInput = document.getElementById("outputPathInput");
 
-    var moduleTypeGMRadio       = document.getElementById("moduleTypeGMRadio");
-    var moduleTypeGMPlayerRadio = document.getElementById("moduleTypeGMPlayerRadio");
-    var moduleTypeCommonRadio   = document.getElementById("moduleTypeCommonRadio");
+    let moduleTypeGMRadio       = document.getElementById("moduleTypeGMRadio");
+    let moduleTypeGMPlayerRadio = document.getElementById("moduleTypeGMPlayerRadio");
+    let moduleTypeCommonRadio   = document.getElementById("moduleTypeCommonRadio");
 
-    var thumbnailCheckbox     = document.getElementById("thumbnailCheckbox");
-    var fileClassCheckbox     = document.getElementById("fileClassCheckbox");
-    var fileEquipmentCheckbox = document.getElementById("fileEquipmentCheckbox");
-    var fileFeatsCheckbox     = document.getElementById("fileFeatsCheckbox");
-    var fileNPCsCheckbox      = document.getElementById("fileNPCsCheckbox");
-    var fileRacesCheckbox     = document.getElementById("fileRacesCheckbox");
-    var fileSpellsCheckbox    = document.getElementById("fileSpellsCheckbox");
-    var fileTokensCheckbox    = document.getElementById("fileTokensCheckbox");
+    let thumbnailCheckbox     = document.getElementById("thumbnailCheckbox");
+    let fileClassCheckbox     = document.getElementById("fileClassCheckbox");
+    let fileEquipmentCheckbox = document.getElementById("fileEquipmentCheckbox");
+    let fileFeatsCheckbox     = document.getElementById("fileFeatsCheckbox");
+    let fileNPCsCheckbox      = document.getElementById("fileNPCsCheckbox");
+    let fileRacesCheckbox     = document.getElementById("fileRacesCheckbox");
+    let fileSpellsCheckbox    = document.getElementById("fileSpellsCheckbox");
+    let fileTokensCheckbox    = document.getElementById("fileTokensCheckbox");
 
-    var parseButton = document.getElementById("parseButton");
+    let parseButton = document.getElementById("parseButton");
 
     newButton.onclick = onNewButtonPress;
     loadButton.onclick = onLoadButtonPress;
@@ -55,7 +55,7 @@ document.addEventListener("DOMContentLoaded", function(){
     }
 
     function onLoadButtonPress(){
-        var data = ipcRenderer.sendSync('loadConfig', null);
+        let data = ipcRenderer.sendSync('loadConfig', null);
         if(data === null) return;
 
         moduleNameInput.value     = data.moduleName;
@@ -88,12 +88,12 @@ document.addEventListener("DOMContentLoaded", function(){
     }
 
     function onSaveButtonPress(){
-        var data = gatherConfigData();
+        let data = gatherConfigData();
         ipcRenderer.sendSync('saveConfig', data);
     }
 
     function gatherConfigData(){
-        var moduleType;
+        let moduleType;
         if(moduleTypeGMRadio.checked === true){
             moduleType = "GM only";
         } else if(moduleTypeGMPlayerRadio.checked === true){
@@ -102,7 +102,7 @@ document.addEventListener("DOMContentLoaded", function(){
             moduleType = "Common";
         }
 
-        var data = {
+        let data = {
             "moduleName":     moduleNameInput.value,
             "moduleCategory": moduleCategoryInput.value,
             "moduleAuthor":   moduleAuthorInput.value,
@@ -135,7 +135,7 @@ document.addEventListener("DOMContentLoaded", function(){
     }
 
     function onParse(){
-        var data = gatherConfigData();
+        let data = gatherConfigData();
         ipcRenderer.sendSync('parse', data);
         $('#navBar a[href="#outputTab"]').tab('show');
         disableControls();
@@ -147,10 +147,10 @@ document.addEventListener("DOMContentLoaded", function(){
     });
 
     function logItem(message, className){
-        var li = document.createElement("li");
+        let li = document.createElement("li");
         li.className = className;
         li.innerHTML = message;
-        var outputPanel  = document.getElementById("outputList");
+        let outputPanel  = document.getElementById("outputList");
         outputPanel.appendChild(li);
     }
 

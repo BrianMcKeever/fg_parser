@@ -8,7 +8,7 @@ let win;
 exports.startController = function(browserWindow){
     win = browserWindow;
     ipcMain.on('saveConfig', (event, arg) => {
-        var path = dialog.showSaveDialog({
+        let path = dialog.showSaveDialog({
             title: "title"
         })
         if(path !== undefined){
@@ -18,14 +18,14 @@ exports.startController = function(browserWindow){
     });
 
     ipcMain.on('loadConfig', (event, arg) => {
-        var path = dialog.showOpenDialog({
+        let path = dialog.showOpenDialog({
             title: "title",
             properties: ["openFile"]
         })
-        var data = null;
+        let data = null;
         if(path !== undefined){
             path = path[0];
-            var buffer = fs.readFileSync(path);
+            let buffer = fs.readFileSync(path);
             data = JSON.parse(buffer.toString());
         }
         event.returnValue = data;
